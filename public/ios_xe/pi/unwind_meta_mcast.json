@@ -1,0 +1,734 @@
+{
+  "meta": {
+    "mcast": {
+      "20": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 rpf {{src_ip}}", 
+        "keys": [
+          "ipv6_rpf_intf", 
+          "ipv6_rpf_nbr", 
+          "ipv6_rpf_nbr_info", 
+          "ipv6_rpf_type"
+        ], 
+        "patterns": {
+          "1": "RPF neighbor: %{IP:ipv6_rpf_nbr}- %{GREEDYDATA:ipv6_rpf_nbr_info}", 
+          "0": "RPF interface: %{INTERFACE_CUSTOM:ipv6_rpf_intf}", 
+          "2": "RPF type: %{GREEDYDATA:ipv6_rpf_type}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "21": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 mfib route detail", 
+        "keys": [
+          "ipv6_mfib_route_detail_src", 
+          "ipv6_mfib_route_detail_grp", 
+          "ipv6_mfib_route_detail_intf", 
+          "ipv6_mfib_route_detail_intf_flags", 
+          "TAG", 
+          "TAG1"
+        ], 
+        "patterns": {
+          "1": "LIST:%{INTERFACE_CUSTOM:ipv6_mfib_route_detail_intf}%{SPACE}%{GREEDYDATA:ipv6_mfib_route_detail_intf_flags};", 
+          "0": "\\(%{IPADDR:ipv6_mfib_route_detail_src},%{IP:ipv6_mfib_route_detail_grp}\\)", 
+          "2": "\\(%{IPADDR:TAG},%{IP:TAG1}\\)"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "22": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 mfib route internal", 
+        "keys": [
+          "ipv6_mfib_route_internal_src", 
+          "ipv6_mfib_route_internal_grp", 
+          "ipv6_mfib_route_internal_hw_stats", 
+          "ipv6_mfib_route_internal_sw_stats", 
+          "ipv6_mfib_route_internal_intf", 
+          "ipv6_mfib_route_internal_intf_flags"
+        ], 
+        "patterns": {
+          "1": "SW Stats:%{SPACE}%{GREEDYDATA:ipv6_mfib_route_internal_sw_stats} \\(", 
+          "0": "\\(%{IPADDR:ipv6_mfib_route_internal_src},%{IP:ipv6_mfib_route_internal_grp}\\)", 
+          "3": "LIST:%{INTERFACE_CUSTOM:ipv6_mfib_route_internal_intf}%{SPACE}%{GREEDYDATA:ipv6_mfib_route_internal_intf_flags};", 
+          "2": "HW Stats:%{SPACE}%{GREEDYDATA:ipv6_mfib_route_internal_hw_stats} \\["
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "7": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 ospf neighbor", 
+        "keys": [
+          "ipv6_ospf_nbrID", 
+          "ipv6_ospf_state", 
+          "ipv6_ospf_refreshTime", 
+          "ipv6_ospf_intf"
+        ], 
+        "patterns": {
+          "0": "%{IP:ipv6_ospf_nbrID}%{SPACE}%{NUMBER}%{SPACE}%{WORD:ipv6_ospf_state}%{SPACE}%{TIME:ipv6_ospf_refreshTime}%{SPACE}%{NUMBER}%{SPACE}%{GREEDYDATA:ipv6_ospf_intf}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "6": {
+        "keys": [], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "cli": "show platform software adjacency fp active", 
+        "remove_empty": "false"
+      }, 
+      "9": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 mroute {{grp_ip}} {{src_ip}}", 
+        "keys": [
+          "ipv6_mroute_inc_intf", 
+          "ipv6_mroute_rpf_nbr", 
+          "ipv6_mroute_out_intf", 
+          "ipv6_mroute_src", 
+          "ipv6_mroute_grp", 
+          "ipv6_mroute_uptime", 
+          "ipv6_mroute_expires", 
+          " %{GREEDYDATA:ipv6_mroute_flags", 
+          "TAG", 
+          "TAG1"
+        ], 
+        "patterns": {
+          "1": "Incoming interface: %{INTERFACE_CUSTOM:ipv6_mroute_inc_intf}", 
+          "0": "\\(%{IPADDR:ipv6_mroute_src}, %{IP:ipv6_mroute_grp}\\),%{SPACE}%{TIME:ipv6_mroute_uptime}\\/%{TIME:ipv6_mroute_expires},%{SPACE}flags: %{GREEDYDATA:ipv6_mroute_flags}", 
+          "3": "%{INTERFACE_CUSTOM:ipv6_mroute_out_intf}, Forward", 
+          "2": "RPF nbr: %{IP:ipv6_mroute_rpf_nbr}", 
+          "4": "\\(%{IPADDR:TAG}, %{IP:TAG1}\\)"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "8": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 pim neighbor", 
+        "keys": [
+          "ipv6_pim_nbrAddr", 
+          "ipv6_pim_intf", 
+          "ipv6_pim_uptime", 
+          "ipv6_pim_expires"
+        ], 
+        "patterns": {
+          "0": "%{IP:ipv6_pim_nbrAddr}%{SPACE}%{INTERFACE_CUSTOM:ipv6_pim_intf}%{SPACE}%{TIME:ipv6_pim_uptime}%{SPACE}%{TIME:ipv6_pim_expires}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "11": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 mfib {{grp_ip}} {{src_ip}}", 
+        "keys": [
+          "ipv6_mfib_src", 
+          "ipv6_mfib_grp", 
+          " %{GREEDYDATA:ipv6_mfib_flags", 
+          "ipv6_mfib_hw_count", 
+          "ipv6_mfib_hw_other", 
+          "ipv6_mfib_intf", 
+          " %{GREEDYDATA:ipv6_mfib_intf_flags", 
+          "TAG", 
+          "TAG1"
+        ], 
+        "patterns": {
+          "1": "SW Forwarding: %{GREEDYDATA:ipv6_mfib_sw_count}, Other: %{GREEDYDATA:ipv6_mfib_sw_other}", 
+          "0": "\\(%{IPADDR:ipv6_mfib_src},%{IP:ipv6_mfib_grp}\\)%{SPACE}Flags: %{GREEDYDATA:ipv6_mfib_flags}", 
+          "3": "LIST:%{INTERFACE_CUSTOM:ipv6_mfib_intf}%{SPACE}Flags: %{GREEDYDATA:ipv6_mfib_intf_flags}", 
+          "2": "HW Forwarding: %{GREEDYDATA:ipv6_mfib_hw_count}, Other: %{GREEDYDATA:ipv6_mfib_hw_other}", 
+          "4": "\\(%{IPADDR:TAG},%{IP:TAG1}\\)"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "10": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 mrib route {{grp_ip}} {{src_ip}}", 
+        "keys": [
+          "ipv6_mrib_route_src", 
+          "ipv6_mrib_route_grp", 
+          " %{IP:ipv6_mrib_route_rpf_nbr", 
+          "%{GREEDYDATA:ipv6_mrib_route_flags", 
+          "ipv6_mrib_route_intf", 
+          " %{GREEDYDATA:ipv6_mrib_route_intf_flags", 
+          "TAG", 
+          "TAG1"
+        ], 
+        "patterns": {
+          "1": "LIST:%{INTERFACE_CUSTOM:ipv6_mrib_route_intf}%{SPACE}Flags: %{GREEDYDATA:ipv6_mrib_route_intf_flags}", 
+          "0": "\\(%{IPADDR:ipv6_mrib_route_src},%{IP:ipv6_mrib_route_grp}\\)%{SPACE}RPF nbr: %{IP:ipv6_mrib_route_rpf_nbr}%{SPACE}Flags:%{GREEDYDATA:ipv6_mrib_route_flags}", 
+          "2": "\\(%{IPADDR:TAG},%{IP:TAG1}\\)"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "13": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 pim topology", 
+        "keys": [
+          "ipv6_pim_topo_src", 
+          "ipv6_pim_topo_grp", 
+          "ipv6_pim_topo_uptime", 
+          " %{GREEDYDATA:ipv6_pim_topo_jp", 
+          "%{GREEDYDATA:ipv6_pim_topo_flags", 
+          "ipv6_pim_topo_rpf_intf", 
+          "ipv6_pim_topo_rpf_src", 
+          "ipv6_pim_topo_out_intf", 
+          "ipv6_pim_topo_intf_uptime", 
+          "ipv6_pim_topo_state", 
+          "ipv6_pim_topo_info", 
+          "TAG", 
+          "TAG1"
+        ], 
+        "patterns": {
+          "1": "SSM SPT UP: %{TIME:ipv6_pim_topo_uptime}%{SPACE}JP: %{GREEDYDATA:ipv6_pim_topo_jp}%{SPACE}Flags:%{GREEDYDATA:ipv6_pim_topo_flags}", 
+          "0": "\\(%{IPADDR:ipv6_pim_topo_src},%{IP:ipv6_pim_topo_grp}\\)", 
+          "3": "%{INTERFACE_CUSTOM:ipv6_pim_topo_out_intf}%{SPACE}, %{TIME:ipv6_pim_topo_intf_uptime}%{SPACE}%{WORD:ipv6_pim_topo_state}%{SPACE}%{GREEDYDATA:ipv6_pim_topo_info}", 
+          "2": "RPF: %{INTERFACE_CUSTOM:ipv6_pim_topo_rpf_intf},%{IPADDR:ipv6_pim_topo_rpf_src}", 
+          "4": "\\(%{IPADDR:TAG},%{IP:TAG1}\\)"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "12": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show platform software ipv6 fp active mfib", 
+        "keys": [
+          "ipv6_fp_active_mfib_grp", 
+          "ipv6_fp_active_mfib_src", 
+          "ipv6_fp_active_mfib_aomID", 
+          " %{BASE16NUM:ipv6_fp_active_mfib_hw_handle", 
+          "ipv6_fp_active_mfib_objID", 
+          "%{GREEDYDATA:ipv6_fp_active_mfib_flags"
+        ], 
+        "patterns": {
+          "1": "Obj id: %{BASE16NUM:ipv6_fp_active_mfib_objID},%{SPACE}Flags:%{GREEDYDATA:ipv6_fp_active_mfib_flags}", 
+          "0": "%{IP:ipv6_fp_active_mfib_grp},%{SPACE}%{IPADDR:ipv6_fp_active_mfib_src}%{SPACE}%{GREEDYDATA}", 
+          "2": "aom id: %{NUMBER:ipv6_fp_active_mfib_aomID},%{SPACE}HW handle: %{BASE16NUM:ipv6_fp_active_mfib_hw_handle}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "15": {
+        "keys": [], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "cli": "show ipv6 mld groups", 
+        "remove_empty": "false"
+      }, 
+      "14": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ipv6 pim traffic", 
+        "keys": [
+          "ipv6_pim_traffic_malformed", 
+          "ipv6_pim_traffic_bad_checksums"
+        ], 
+        "patterns": {
+          "1": "Bad Checksums%{SPACE}%{NUMBER:ipv6_pim_traffic_bad_checksums}", 
+          "0": "Malformed Packets%{SPACE}%{NUMBER:ipv6_pim_traffic_malformed}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "17": {
+        "keys": [], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "cli": "show platform software infrastructure  punt statistics", 
+        "remove_empty": "false"
+      }, 
+      "16": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show platform hardware pp active idmgr IDs summary all", 
+        "keys": [
+          "platform_idmgr_mcast_res_asic", 
+          "platform_idmgr_mcast_res_used", 
+          "platform_idmgr_mcast_res_free", 
+          "platform_idmgr_mcast_dyn_asic", 
+          "platform_idmgr_mcast_dyn_used", 
+          "platform_idmgr_mcast_dyn_free"
+        ], 
+        "patterns": {
+          "1": "Multicast ID Dyn%{SPACE}%{NUMBER}%{SPACE}%{NUMBER:platform_idmgr_mcast_dyn_asic}%{SPACE}%{NUMBER:platform_idmgr_mcast_dyn_used}%{SPACE}%{NUMBER:platform_idmgr_mcast_dyn_free}", 
+          "0": "Multicast ID Res%{SPACE}%{NUMBER}%{SPACE}%{NUMBER:platform_idmgr_mcast_res_asic}%{SPACE}%{NUMBER:platform_idmgr_mcast_res_used}%{SPACE}%{NUMBER:platform_idmgr_mcast_res_free}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "19": {
+        "keys": [], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "cli": "show ipv6 traffic", 
+        "remove_empty": "false"
+      }, 
+      "18": {
+        "keys": [], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "cli": "show platform hardware pp active infrastructure pi nft statistics | i MCAST|RPF", 
+        "remove_empty": "false"
+      }
+    }
+  }, 
+  "flows": {
+    "verify_ipv6_ospf_state": {
+      "models": [
+        [
+          "FULL", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_ospf_state", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_20": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_20 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_rpf_intf", 
+        "mcast-ipv6_rpf_nbr", 
+        "mcast-ipv6_rpf_nbr_info", 
+        "mcast-ipv6_rpf_type", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_21": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_21 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_mfib_route_detail_src", 
+        "mcast-ipv6_mfib_route_detail_grp", 
+        "mcast-ipv6_mfib_route_detail_intf", 
+        "mcast-ipv6_mfib_route_detail_intf_flags", 
+        "mcast-TAG", 
+        "mcast-TAG1", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_22": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_22 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_mfib_route_internal_src", 
+        "mcast-ipv6_mfib_route_internal_grp", 
+        "mcast-ipv6_mfib_route_internal_hw_stats", 
+        "mcast-ipv6_mfib_route_internal_sw_stats", 
+        "mcast-ipv6_mfib_route_internal_intf", 
+        "mcast-ipv6_mfib_route_internal_intf_flags", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_9": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_9 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_mroute_inc_intf", 
+        "mcast-ipv6_mroute_rpf_nbr", 
+        "mcast-ipv6_mroute_out_intf", 
+        "mcast-ipv6_mroute_src", 
+        "mcast-ipv6_mroute_grp", 
+        "mcast-ipv6_mroute_uptime", 
+        "mcast-ipv6_mroute_expires", 
+        "mcast- %{GREEDYDATA:ipv6_mroute_flags", 
+        "mcast-TAG", 
+        "mcast-TAG1", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_8": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_8 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_pim_nbrAddr", 
+        "mcast-ipv6_pim_intf", 
+        "mcast-ipv6_pim_uptime", 
+        "mcast-ipv6_pim_expires", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_1": {
+      "models": [
+        [
+          "done(verify_mcast_1 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_0": {
+      "models": [
+        [
+          "done(verify_mcast_0 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_3": {
+      "models": [
+        [
+          "done(verify_mcast_3 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_2": {
+      "models": [
+        [
+          "done(verify_mcast_2 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_5": {
+      "models": [
+        [
+          "done(verify_mcast_5 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_4": {
+      "models": [
+        [
+          "done(verify_mcast_4 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_7": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_7 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_ospf_nbrID", 
+        "mcast-ipv6_ospf_state", 
+        "mcast-ipv6_ospf_refreshTime", 
+        "mcast-ipv6_ospf_intf", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_6": {
+      "models": [
+        [
+          "done(verify_mcast_6 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_19": {
+      "models": [
+        [
+          "done(verify_mcast_19 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_18": {
+      "models": [
+        [
+          "done(verify_mcast_18 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_15": {
+      "models": [
+        [
+          "done(verify_mcast_15 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_14": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "done(verify_mcast_14 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_pim_traffic_malformed", 
+        "mcast-ipv6_pim_traffic_bad_checksums", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_17": {
+      "models": [
+        [
+          "done(verify_mcast_17 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_mcast_16": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_16 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-platform_idmgr_mcast_res_asic", 
+        "mcast-platform_idmgr_mcast_res_used", 
+        "mcast-platform_idmgr_mcast_res_free", 
+        "mcast-platform_idmgr_mcast_dyn_asic", 
+        "mcast-platform_idmgr_mcast_dyn_used", 
+        "mcast-platform_idmgr_mcast_dyn_free", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_11": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_11 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_mfib_src", 
+        "mcast-ipv6_mfib_grp", 
+        "mcast- %{GREEDYDATA:ipv6_mfib_flags", 
+        "mcast-ipv6_mfib_hw_count", 
+        "mcast-ipv6_mfib_hw_other", 
+        "mcast-ipv6_mfib_intf", 
+        "mcast- %{GREEDYDATA:ipv6_mfib_intf_flags", 
+        "mcast-TAG", 
+        "mcast-TAG1", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_10": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_10 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_mrib_route_src", 
+        "mcast-ipv6_mrib_route_grp", 
+        "mcast- %{IP:ipv6_mrib_route_rpf_nbr", 
+        "mcast-%{GREEDYDATA:ipv6_mrib_route_flags", 
+        "mcast-ipv6_mrib_route_intf", 
+        "mcast- %{GREEDYDATA:ipv6_mrib_route_intf_flags", 
+        "mcast-TAG", 
+        "mcast-TAG1", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_13": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_13 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_pim_topo_src", 
+        "mcast-ipv6_pim_topo_grp", 
+        "mcast-ipv6_pim_topo_uptime", 
+        "mcast- %{GREEDYDATA:ipv6_pim_topo_jp", 
+        "mcast-%{GREEDYDATA:ipv6_pim_topo_flags", 
+        "mcast-ipv6_pim_topo_rpf_intf", 
+        "mcast-ipv6_pim_topo_rpf_src", 
+        "mcast-ipv6_pim_topo_out_intf", 
+        "mcast-ipv6_pim_topo_intf_uptime", 
+        "mcast-ipv6_pim_topo_state", 
+        "mcast-ipv6_pim_topo_info", 
+        "mcast-TAG", 
+        "mcast-TAG1", 
+        "result"
+      ]
+    }, 
+    "verify_mcast_12": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_mcast_12 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "mcast-ipv6_fp_active_mfib_grp", 
+        "mcast-ipv6_fp_active_mfib_src", 
+        "mcast-ipv6_fp_active_mfib_aomID", 
+        "mcast- %{BASE16NUM:ipv6_fp_active_mfib_hw_handle", 
+        "mcast-ipv6_fp_active_mfib_objID", 
+        "mcast-%{GREEDYDATA:ipv6_fp_active_mfib_flags", 
+        "result"
+      ]
+    }
+  }
+}

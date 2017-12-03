@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "msfpga_link_status": {
+      "0": {
+        "cli": "show controllers macsec hardware interface HundredGigE {{IFNAME}} status", 
+        "script": "PD:msfpga_link_status.py", 
+        "keys": [
+          "network_rx_status", 
+          "system_rx_status", 
+          "network_tx_local_fault", 
+          "system_tx_local_fault", 
+          "network_rx_local_fault", 
+          "system_rx_local_fault", 
+          "network_rx_remote_fault", 
+          "system_rx_remote_fault", 
+          "network_rx_hiber", 
+          "system_rx_hiber"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "optics_controller": {
+      "0": {
+        "cli": "show controller optics {{IFNAME}}", 
+        "script": "PD:parse_optics_controller.py", 
+        "keys": [
+          "transport_state", 
+          "rx_power", 
+          "frequency", 
+          "laser_state", 
+          "alarms", 
+          "pm", 
+          "optics_type", 
+          "tx_power", 
+          "lbc", 
+          "oper_state"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "denali_register_state": {
+      "0": {
+        "cli": "show coherent hardware denali instance {{DENALI_INSTANCE}} location {{LOCATION}}", 
+        "script": "PD:parse_denali_registers.py", 
+        "keys": [
+          "host_lane_skew", 
+          "module_state", 
+          "tx_lock", 
+          "rx_lock", 
+          "tx_signal", 
+          "tx_cmu", 
+          "module_general_status", 
+          "rx_signal", 
+          "tx_ref_clock", 
+          "laser_state", 
+          "demod_lock", 
+          "disper_lock", 
+          "rx_clocks", 
+          "tx_chan", 
+          "asic_rx_ready", 
+          "pwr", 
+          "tx_clocks", 
+          "tx_jitter_pll", 
+          "asic_tx_ready", 
+          "dac_ready", 
+          "led_state", 
+          "rx_chan", 
+          "traffic_type", 
+          "adc_ready", 
+          "adc_output"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "otn_controller": {
+      "0": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show controller coherentDSP  {{IFNAME}}", 
+        "keys": [
+          "alarms", 
+          "controller_state"
+        ], 
+        "patterns": {
+          "1": "Controller State\\s+:\\s+%{WORD:controller_state}", 
+          "0": "Detected Alarms\\s+:\\s+%{WORD:alarms}"
+        }, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "denali_link_state": {
+      "0": {
+        "cli": "show coherent driver linkstate location {{LOCATION}}", 
+        "script": "PD:parse_denali_linkstate.py", 
+        "keys": [
+          "chip", 
+          "host_link1", 
+          "host_link2", 
+          "host_link3", 
+          "host_link4", 
+          "network_link1", 
+          "network_link2", 
+          "network_link3", 
+          "network_link4"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "read_coherent_cfg": {
+      "0": {
+        "cli": "run python /pkg/bin/coherent_config.py Optics {{LOCATION}} {{IFNAME}}", 
+        "script": "PD:read_coherent_config.py", 
+        "keys": [
+          "diff", 
+          "fec", 
+          "state", 
+          "speed", 
+          "frequency"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "show_version_checking": {
+      "0": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show version", 
+        "keys": [
+          "time1", 
+          "day1"
+        ], 
+        "patterns": {
+          "1": "%{DAY:day1}", 
+          "0": "%{TIME:time1}"
+        }, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "fia": {
+      "0": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show controllers fia driver location {{LOCATION}}", 
+        "keys": [
+          "rack", 
+          "slot", 
+          "asic_instance", 
+          "fap_id", 
+          "hp", 
+          "slice_state", 
+          "asic_type", 
+          "admin_state", 
+          "oper_state", 
+          "asic_state", 
+          "last_init", 
+          "pon", 
+          "hr", 
+          "mode_state"
+        ], 
+        "patterns": {
+          "0": "^\\|\\s+%{INT:rack}\\/%{INT:slot}\\/%{INT:asic_instance}\\s+\\|\\s+%{INT:fap_id}\\|\\s+%{INT:hp}\\|\\s+%{WORD:slice_state}\\s+\\|\\s+%{WORD:asic_type}\\|\\s+%{WORD:admin_state}\\s+\\|\\s+%{WORD:oper_state}\\s+\\|%{WORD:asic_state}\\s+\\|%{WORD:last_init}\\s+\\|\\s+%{INT:pon}\\|\\s+%{INT:hr}\\|%{WORD:mode_state}\\|"
+        }, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }, 
+    "coherent_internal": {
+      "0": {
+        "cli": "show coherent driver detail port {{DENALI_ID}} location {{LOCATION}}", 
+        "script": "PD:coherent_internal.py", 
+        "keys": [
+          "optics_alarm_init_code", 
+          "config_traffic_type", 
+          "config_cd_max", 
+          "veth_admin_state", 
+          "config_tx_power", 
+          "veth_intf_handle", 
+          "is_laser_on_progress", 
+          "pluggable_type", 
+          "is_provision_pending", 
+          "dsp_admin_state", 
+          "is_optics_pm_init", 
+          "actual_cd_min", 
+          "set_traffic_type_code", 
+          "optics_pm_init_code", 
+          "set_cd_max_code", 
+          "laser_state", 
+          "config_frequency", 
+          "dsp_pm_init_code", 
+          "set_laser_code", 
+          "actual_traffic_type", 
+          "veth_intf_name", 
+          "is_optics_alarm_init", 
+          "set_tx_code", 
+          "is_dsp_pm_init", 
+          "set_cd_min_code", 
+          "num_ether_intf", 
+          "is_dsp_alarm_init", 
+          "actual_tx_power", 
+          "actual_cd_max", 
+          "optics_admin_state", 
+          "actual_frequency", 
+          "set_frequency_code", 
+          "dsp_alarm_init_code", 
+          "config_cd_min"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "write_config": {
+          "1": {
+            "post_config": "CONFIG: controller Optics {{IFNAME}};no shut;commit", 
+            "description": "set carrier", 
+            "pre_config": "CONFIG: controller Optics {{IFNAME}};shut;commit", 
+            "cli": "CONFIG:controller Optics {{IFNAME}};dwdm-carrier {{COHERENT_CARRIER}} itu-ch {{COHERENT_CHANNEL_NUM}};commit"
+          }, 
+          "0": {
+            "delay": "5", 
+            "post_config": "CONFIG: controller Optics {{IFNAME}};no shut;commit", 
+            "description": "port mode", 
+            "pre_config": "CONFIG: controller Optics {{IFNAME}};shut;commit", 
+            "cli": "CONFIG:controller Optics {{IFNAME}};port-mode speed {{COHERENT_SPEED}} fec {{COHERENT_FEC}} diff {{COHERENT_DIFFERENTIAL}};commit"
+          }, 
+          "2": {
+            "post_config": "", 
+            "description": "enable interface", 
+            "pre_config": "CONFIG:int {{SUB_IF1}};no vrf;no ipv4 addr", 
+            "cli": "CONFIG: int {{SUB_IF1}}; vrf {{SUB_IF_VRF}}; ipv4 address {{LOCAL_IP}} {{LOCAL_MASK}};no shut;commit;exit"
+          }
+        }, 
+        "type": "config"
+      }
+    }, 
+    "macsec_linkstatus": {
+      "0": {
+        "cli": "show controllers macsec hardware interface HundredGigE {{IFNAME}} status", 
+        "script": "PD:parse_macsec_linkstatus.py", 
+        "keys": [
+          "network_rx_status", 
+          "system_rx_status", 
+          "network_tx_local_fault", 
+          "system_tx_local_fault", 
+          "network_rx_local_fault", 
+          "system_rx_local_fault", 
+          "network_rx_remote_fault", 
+          "system_rx_remote_fault", 
+          "network_rx_hiber", 
+          "system_rx_hiber"
+        ], 
+        "patterns": {}, 
+        "multiline": "false", 
+        "type": "oper"
+      }
+    }
+  }, 
+  "flows": {
+    "coherent_state": {
+      "models": [
+        [
+          "0", 
+          "ON", 
+          "0", 
+          "NO", 
+          "0", 
+          "NO", 
+          "Up", 
+          "UP", 
+          "0x0", 
+          "0", 
+          "CFP2", 
+          "{{TRAFFIC_TYPE_STRING}}", 
+          "1", 
+          "0x0", 
+          "0x0", 
+          "verify(denali_link_state:ping_status)"
+        ], 
+        [
+          "0", 
+          "ON", 
+          "0", 
+          "NO", 
+          "0", 
+          "NO", 
+          "Up", 
+          "UP", 
+          "0x0", 
+          "0", 
+          "CFP2", 
+          "{{TRAFFIC_TYPE_STRING}}", 
+          "2", 
+          "0x0", 
+          "0x0", 
+          "verify(denali_link_state_2_intf:ping_status)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "coherent_internal-0-dsp_alarm_init_code", 
+        "coherent_internal-0-laser_state", 
+        "coherent_internal-0-dsp_pm_init_code", 
+        "coherent_internal-0-is_laser_on_progress", 
+        "coherent_internal-0-optics_alarm_init_code", 
+        "coherent_internal-0-is_provision_pending", 
+        "coherent_internal-0-optics_admin_state", 
+        "coherent_internal-0-veth_admin_state", 
+        "coherent_internal-0-set_frequency_code", 
+        "coherent_internal-0-optics_pm_init_code", 
+        "coherent_internal-0-pluggable_type", 
+        "coherent_internal-0-actual_traffic_type", 
+        "coherent_internal-0-num_ether_intf", 
+        "coherent_internal-0-set_cd_min_code", 
+        "coherent_internal-0-set_tx_code", 
+        "result"
+      ]
+    }, 
+    "validate_fia_intf_create": {
+      "models": [
+        [
+          "NRML", 
+          "UP", 
+          "UP", 
+          "done(fia driver state looks good)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "fia-0-asic_state", 
+        "fia-0-admin_state", 
+        "fia-0-oper_state", 
+        "result"
+      ]
+    }, 
+    "coherent_top_level": {
+      "models": [
+        [
+          "REGEX(done.*)", 
+          "REGEX(done.*)", 
+          "REGEX(done.*)", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "FLOW-coherent_cfg_read_state", 
+        "FLOW-coherent_state", 
+        "FLOW-coherent_config", 
+        "result"
+      ]
+    }, 
+    "denali_link_state": {
+      "models": [
+        [
+          "UP", 
+          "UP", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "denali_link_state-0-network_link1", 
+        "denali_link_state-0-host_link1", 
+        "result"
+      ]
+    }, 
+    "ping_status": {
+      "models": [
+        [
+          "GREATER_THAN(94)", 
+          "done(ok)"
+        ], 
+        [
+          "LESS_THAN(95)", 
+          "rc(check the data path)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "ping-0-success_rate", 
+        "result"
+      ]
+    }, 
+    "denali_link_state_2_intf": {
+      "models": [
+        [
+          "UP", 
+          "UP", 
+          "UP", 
+          "UP", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "denali_link_state-0-host_link3", 
+        "denali_link_state-0-network_link3", 
+        "denali_link_state-0-network_link1", 
+        "denali_link_state-0-host_link1", 
+        "result"
+      ]
+    }, 
+    "coherent_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-coherent_internal-0-0", 
+        "config-coherent_internal-0-1", 
+        "config-coherent_internal-0-2"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "coherent_cfg_read_state": {
+      "models": [
+        [
+          "NOSHUT", 
+          "{{NUMERIC_SPEED}}", 
+          "{{NUMERIC_DIFF}}", 
+          "{{NUMERIC_FEC}}", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "read_coherent_cfg-0-state", 
+        "read_coherent_cfg-0-speed", 
+        "read_coherent_cfg-0-diff", 
+        "read_coherent_cfg-0-fec", 
+        "result"
+      ]
+    }
+  }
+}

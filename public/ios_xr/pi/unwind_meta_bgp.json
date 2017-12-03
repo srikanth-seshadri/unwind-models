@@ -1,0 +1,396 @@
+{
+  "meta": {
+    "bgp": {
+      "nbr": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show bgp neighbor", 
+        "keys": [
+          "TAG", 
+          "nbr_ip", 
+          "nbr_as", 
+          "local_as", 
+          "state", 
+          "uptime", 
+          "nsr_state", 
+          "rcvd_msgs", 
+          "sent_msgs", 
+          "acc_prefix", 
+          "bestpath", 
+          "prefix_adv", 
+          "local_host", 
+          "local_port", 
+          "ifh", 
+          "foriegn_host", 
+          "foriegn_port", 
+          "nbr_desc"
+        ], 
+        "patterns": {
+          "11": "Description: %{GREEDYDATA:nbr_desc}", 
+          "10": "BGP neighbor is %{GREEDYDATA:TAG}", 
+          "1": "Remote AS %{GREEDYDATA:nbr_as}, local AS %{GREEDYDATA:local_as}, external link", 
+          "0": "BGP neighbor is %{GREEDYDATA:nbr_ip}", 
+          "3": "NSR State: %{GREEDYDATA:nsr_state}", 
+          "2": "BGP state = %{ALPHA:state}, up for %{GREEDYDATA:uptime}", 
+          "5": "Sent %{INT:sent_msgs}", 
+          "4": "Received %{INT:rcvd_msgs}", 
+          "7": "Prefix advertised %{INT:prefix_adv}", 
+          "6": "%{INT:acc_prefix} accepted prefixes, %{INT:bestpath} are bestpaths", 
+          "9": "Foreign host: %{GREEDYDATA:foriegn_host}, Foreign port: %{INT:foriegn_port}", 
+          "8": "Local host: %{GREEDYDATA:local_host}, Local port: %{INT:local_port}, IF Handle: %{GREEDYDATA:ifh}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper"
+      }, 
+      "run_cfg": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show running-config router bgp", 
+        "query_flow": "", 
+        "keys": [
+          "nbr_ip", 
+          "nbr_as", 
+          "nbr_af", 
+          "nbr_safi", 
+          "TAG", 
+          "nbr_desc"
+        ], 
+        "status_flows": [
+          ""
+        ], 
+        "patterns": {
+          "1": "remote-as%{SPACE}%{INT:nbr_as}", 
+          "0": "neighbor%{SPACE}%{GREEDYDATA:nbr_ip}", 
+          "3": "neighbor%{SPACE}%{GREEDYDATA:TAG}", 
+          "2": "address-family %{ALPHANUMERIC:nbr_af} %{ALPHA:nbr_safi}", 
+          "4": "description %{GREEDYDATA:nbr_desc}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper"
+      }, 
+      "5": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "redistribute command", 
+        "keys": [], 
+        "remove_empty": "false", 
+        "multiline": "false", 
+        "write_config": {
+          "0": {
+            "post_config": "", 
+            "cli": "CONFIG:router bgp {{as}};address-family ipv4 unicast;redistribute {{bgp_redist_protocol}}", 
+            "pre_config": "", 
+            "description": "bgp_redist"
+          }
+        }, 
+        "type": "config"
+      }, 
+      "4": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "network command for ipv4", 
+        "keys": [], 
+        "remove_empty": "false", 
+        "multiline": "false", 
+        "write_config": {
+          "0": {
+            "post_config": "", 
+            "cli": "CONFIG:router bgp {{as}};address-family ipv4 unicast;network {{ipv4_network}}", 
+            "pre_config": "", 
+            "description": "bgp_ipv4"
+          }
+        }, 
+        "type": "config"
+      }, 
+      "7": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "bgp neighbor command", 
+        "keys": [], 
+        "remove_empty": "false", 
+        "multiline": "false", 
+        "write_config": {
+          "0": {
+            "post_config": "", 
+            "cli": "CONFIG:router bgp {{as}};neighbor {{nbr}};remote-as {{remote_as}};description {{description}};address-family {{afi}} {{safi}};route-policy {{in_policy}} in;route-policy {{out_policy}} out", 
+            "pre_config": "", 
+            "description": "bgp_rpl"
+          }
+        }, 
+        "type": "config"
+      }, 
+      "6": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "network command for ipv6", 
+        "keys": [], 
+        "remove_empty": "false", 
+        "multiline": "false", 
+        "write_config": {
+          "0": {
+            "post_config": "", 
+            "cli": "CONFIG:router bgp {{as}};address-family ipv6 unicast;network {{ipv6_network}}", 
+            "pre_config": "", 
+            "description": "bgp_ipv6"
+          }
+        }, 
+        "type": "config"
+      }, 
+      "ipv4": {
+        "markerindex": {
+          "blockstart": 1
+        }, 
+        "cli": "show bgp ipv4 all", 
+        "keys": [
+          "TAG", 
+          "route", 
+          "nexthop", 
+          "path", 
+          "metric", 
+          "locprf", 
+          "weight"
+        ], 
+        "patterns": {
+          "1": "\\*> %{ROUTE:TAG}%{GREEDYDATA}", 
+          "0": "\\*> %{ROUTE:route}%{SPACE}%{IP:nexthop}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper", 
+        "cut_keys": "42-48:metric,49-55:locprf,56-61:weight,63-:path"
+      }
+    }
+  }, 
+  "flows": {
+    "verify_bgp_run_cfg": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_bgp_run_cfg successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "bgp-run_cfg-nbr_ip", 
+        "bgp-run_cfg-nbr_as", 
+        "bgp-run_cfg-nbr_af", 
+        "bgp-run_cfg-nbr_safi", 
+        "bgp-run_cfg-nbr_desc", 
+        "result"
+      ]
+    }, 
+    "bgp_v6_network_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-bgp-6-0"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "validate_bgp_nbr": {
+      "models": [
+        [
+          "{{bgp-run_cfg-nbr_ip}}", 
+          "{{bgp-run_cfg-nbr_as}}", 
+          "{{nbr_state}}", 
+          "verify(BGP neighbor ok, validate_tcp_session)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "bgp-nbr-nbr_ip", 
+        "bgp-nbr-nbr_as", 
+        "bgp-nbr-state", 
+        "result"
+      ]
+    }, 
+    "validate_bgp_connected_route": {
+      "models": [
+        [
+          "NODE({{bgp-run_cfg-nbr_desc}}, {{connected-conn_ipv4-route}})", 
+          "CONTAINS({{#bgp-run_cfg-nbr_as}})", 
+          "done(connected routes received ok)"
+        ]
+      ], 
+      "join_string": "NODE({{bgp-run_cfg-nbr_desc}},  {{connected-conn_ipv4-route}}): {{bgp-ipv4-route}}", 
+      "config": [], 
+      "schema": [
+        "bgp-ipv4-route", 
+        "bgp-ipv4-path", 
+        "result"
+      ]
+    }, 
+    "bgp_redist_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-bgp-5-0"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "bgp_v4_network_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-bgp-4-0"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "validate_bgp_route_simple": {
+      "models": [
+        [
+          "REGEX(.*)", 
+          "done(BGP route ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "bgp-ipv4-route", 
+        "result"
+      ]
+    }, 
+    "validate_bgp_rib_route": {
+      "models": [
+        [
+          "{{rib-ipv4-route}}", 
+          "{{rib-ipv4-nexthop}}", 
+          "B", 
+          "done(BGP route installed in RIB)"
+        ], 
+        [
+          "{{rib-ipv4-route}}", 
+          "0.0.0.0", 
+          "C", 
+          "done(Connected route installed in RIB)"
+        ], 
+        [
+          "{{rib-ipv4-route}}", 
+          "0.0.0.0", 
+          "L", 
+          "done(Local route installed in RIB)"
+        ]
+      ], 
+      "join_string": "{{bgp-ipv4-route}}:{{rib-ipv4-route}}", 
+      "config": [], 
+      "schema": [
+        "bgp-ipv4-route", 
+        "bgp-ipv4-nexthop", 
+        "rib-ipv4-route_type", 
+        "result"
+      ]
+    }, 
+    "bgp_router_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-bgp-3-0"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "verify_bgp_nbr": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_bgp_nbr successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "bgp-nbr-nbr_ip", 
+        "bgp-nbr-nbr_as", 
+        "bgp-nbr-local_as", 
+        "bgp-nbr-state", 
+        "bgp-nbr-uptime", 
+        "bgp-nbr-nsr_state", 
+        "bgp-nbr-rcvd_msgs", 
+        "bgp-nbr-sent_msgs", 
+        "bgp-nbr-acc_prefix", 
+        "bgp-nbr-bestpath", 
+        "bgp-nbr-prefix_adv", 
+        "bgp-nbr-local_host", 
+        "bgp-nbr-local_port", 
+        "bgp-nbr-ifh", 
+        "bgp-nbr-foriegn_host", 
+        "bgp-nbr-foriegn_port", 
+        "bgp-nbr-nbr_desc", 
+        "result"
+      ]
+    }, 
+    "bgp_nbr_config": {
+      "models": [
+        [
+          "done(ok)"
+        ]
+      ], 
+      "config": [
+        "config-bgp-7-0"
+      ], 
+      "schema": [
+        "result"
+      ]
+    }, 
+    "validate_bgp_route": {
+      "models": [
+        [
+          "RANGE(0:32768)", 
+          "REGEX(.*i|.*?)", 
+          "verify(validate_rib_route)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "bgp-ipv4-weight", 
+        "bgp-ipv4-path", 
+        "result"
+      ]
+    }
+  }
+}
