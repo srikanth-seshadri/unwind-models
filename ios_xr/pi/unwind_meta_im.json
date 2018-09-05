@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "im": {
+      "0": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show im database interface {{intf}}", 
+        "keys": [
+          "ifh"
+        ], 
+        "patterns": {
+          "0": "Interface %{PORT_STR}, ifh %{BASE16NUM:ifh}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper"
+      }
+    }
+  }, 
+  "flows": {
+    "verify_im_0": {
+      "models": [
+        [
+          "0", 
+          "done(verify_im_0 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "im-0-ifh", 
+        "result"
+      ]
+    }
+  }
+}

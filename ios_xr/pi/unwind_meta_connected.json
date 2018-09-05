@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "connected": {
+      "conn_ipv4": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show connected ipv4 interfaces", 
+        "keys": [
+          "vrf", 
+          "state", 
+          "route", 
+          "TAG"
+        ], 
+        "patterns": {
+          "1": "%{GREEDYDATA}\\s%{ROUTE:TAG}", 
+          "0": "%{ROUTING_PORT_STR}\\s*%{WORD:vrf}\\s*%{WORD:state}\\s*%{ROUTE:route}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "config": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show running-config interface", 
+        "keys": [
+          "route", 
+          "TAG"
+        ], 
+        "patterns": {
+          "1": "ipv4 address %{ROUTE:route}", 
+          "0": "interface %{ROUTING_PORT_STR}", 
+          "2": "ipv4 address %{ROUTE:TAG}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false"
+      }, 
+      "ipv4": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show ip route | inc ^C", 
+        "keys": [
+          "route", 
+          "TAG"
+        ], 
+        "patterns": {
+          "1": "%{ROUTE_TYPE}%{SPACE}%{ROUTE:TAG}", 
+          "0": "%{ROUTE_TYPE}%{SPACE}%{ROUTE:route}%{DATA}%{ROUTING_PORT_STR}"
+        }, 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper"
+      }
+    }
+  }, 
+  "flows": {
+    "verify_connected_conn_ipv4": {
+      "models": [
+        [
+          "0", 
+          "0", 
+          "0", 
+          "done(verify_connected_conn_ipv4 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "connected-conn_ipv4-vrf", 
+        "connected-conn_ipv4-state", 
+        "connected-conn_ipv4-route", 
+        "result"
+      ]
+    }, 
+    "validate_network_conn_route": {
+      "models": [
+        [
+          "NODE({{peer_name}}, {{bgp-ipv4-route}})", 
+          "REGEX(.*done.*)", 
+          "done(Connected Route transfer through BGP OK)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "connected-conn_ipv4-route", 
+        "RESULT-PI:bgp_route_validate.py", 
+        "result"
+      ]
+    }, 
+    "verify_connected_config": {
+      "models": [
+        [
+          "0", 
+          "done(verify_connected_config successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "connected-config-route", 
+        "result"
+      ]
+    }, 
+    "network_test_flow": {
+      "models": [
+        [
+          "NODE()", 
+          "0", 
+          "done(ok)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "connected-ipv4-route", 
+        "NODE({{peer_name}}, {{bgp-ipv4-path}})", 
+        "result"
+      ]
+    }, 
+    "verify_connected_ipv4": {
+      "models": [
+        [
+          "{{connected-conn_ipv4-route}}", 
+          "done(verify_connected_ipv4 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "connected-ipv4-route", 
+        "result"
+      ]
+    }
+  }
+}

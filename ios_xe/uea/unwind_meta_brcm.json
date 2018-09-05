@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "brcm": {
+      "0": {
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "cli": "show platform hardware pp active bshell \"{{asic_id}}: kbp print\"", 
+        "keys": [], 
+        "multiline": "false", 
+        "remove_empty": "false", 
+        "type": "oper"
+      }
+    }
+  }, 
+  "flows": {
+    "verify_brcm_0": {
+      "models": [
+        [
+          "done(verify_brcm_0 successful)"
+        ]
+      ], 
+      "config": [], 
+      "schema": [
+        "result"
+      ]
+    }
+  }
+}

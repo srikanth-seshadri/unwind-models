@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "platform_pd": {
+      "1": {
+        "markerindex": {
+          "blockstart": 0
+        },
+        "cli": "show hw-module slice {{slice}}",
+        "keys": [
+          "slice_slice_id",
+          "slice_client_rate",
+          "slice_status"
+        ],
+        "patterns": {
+          "1": "Client Bitrate:%{SPACE}%{INT:slice_client_rate}",
+          "0": "Slice ID:%{SPACE}%{INT:slice_slice_id}",
+          "2": "Status:%{SPACE}%{GREEDYDATA:slice_status}"
+        },
+        "multiline": "false",
+        "remove_empty": "false",
+        "type": "oper"
+      },
+      "hw_module": {
+        "markerindex": {
+          "blockstart": 0
+        },
+        "cli": "show hw-module slice all",
+        "keys": [
+          "slice_id",
+          "client_rate",
+          "status",
+          "trunk_rate",
+          "dp_fpga_fw_type",
+          "dp_fpga_fw_version",
+          "hw_status",
+          "enc_support",
+          "lldp_drop_enabled",
+          "client_ports_str",
+          "client_port"
+        ],
+        "patterns": {
+          "11": "Slice ID:%{SPACE}%{INT:TAG}",
+          "10": "SET:%{CLIENT_PORT}",
+          "1": "Client Bitrate:%{SPACE}%{INT:client_rate}",
+          "0": "Slice ID:%{SPACE}%{INT:slice_id}",
+          "3": "Trunk Bitrate:%{SPACE}%{INT:trunk_rate}",
+          "2": "Status:%{SPACE}%{GREEDYDATA:status}",
+          "5": "DP FPGA FW Version:%{SPACE}%{GREEDYDATA:dp_fpga_fw_version}",
+          "4": "DP FPGA FW Type:%{SPACE}%{GREEDYDATA:dp_fpga_fw_type}",
+          "7": "Encryption Supported:%{SPACE}%{GREEDYDATA:enc_support}",
+          "6": "HW Status:%{SPACE}%{GREEDYDATA:hw_status}",
+          "9": "LIST:%{CLIENT_PORT_STR:client_ports_str}",
+          "8": "LLDP Drop Enabled:%{SPACE}%{GREEDYDATA:lldp_drop_enabled}"
+        },
+        "multiline": "false",
+        "remove_empty": "false",
+        "type": "oper"
+      }
+    }
+  }, 
+  "flows": {
+  }
+}
