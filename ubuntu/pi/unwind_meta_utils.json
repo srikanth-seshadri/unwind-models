@@ -1,0 +1,46 @@
+{
+  "flows": {
+    "verify_avail_disk_space": {
+      "actions": [], 
+      "config": [], 
+      "models": [
+        [
+          "LESS_THAN({{max_space_percent}})", 
+          "done(Disk space ok)"
+        ]
+      ], 
+      "schema": [
+        "file_system-df-use_percent", 
+        "result"
+      ]
+    }
+  }, 
+  "meta": {
+    "file_system": {
+      "df": {
+        "cli": "df -h | grep -v Filesystem", 
+        "index_tags": "TAG=mounted_on", 
+        "keys": [
+          "avail", 
+          "filesystem", 
+          "mounted_on", 
+          "size", 
+          "use_percent", 
+          "used"
+        ], 
+        "markerindex": {
+          "blockstart": 0
+        }, 
+        "multiline": "false", 
+        "patterns": {
+          "0": "^%{NOTSPACE:filesystem}\\s+%{NOTSPACE:size}\\s+%{NOTSPACE:used}\\s+%{NOTSPACE:avail}\\s+%{NOTSPACE:use_percent}\\s+%{NOTSPACE:mounted_on}"
+        }, 
+        "remove_empty": "false", 
+        "transforms": {
+          "use_percent": "{{use_percent}}[0:-1]"
+        }, 
+        "type": "oper"
+      }
+    }
+  }
+}
